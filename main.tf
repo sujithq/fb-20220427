@@ -69,6 +69,14 @@ resource "azurerm_linux_virtual_machine" "this" {
     sku       = each.value.source_image_reference.sku
     version   = each.value.source_image_reference.version
   }
+
+  dynamic "additional_capabilities" {
+    for_each = each.value.ultra_ssd_enabled ? ["additional_capabilities"] : []
+    content {
+      ultra_ssd_enabled = true
+    }
+  }
+
 }
 
 resource "azurerm_managed_disk" "this" {
@@ -78,7 +86,7 @@ resource "azurerm_managed_disk" "this" {
   create_option        = "Empty"
   disk_size_gb         = each.value.size
   resource_group_name  = azurerm_resource_group.this.name
-  storage_account_type = "Standard_LRS"
+  storage_account_type = each.value.storage_account_type
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "this" {

@@ -8,8 +8,10 @@ variable "vms" {
       version   = string
     })
     disks = map(object({
-      size = number
+      size                 = number
+      storage_account_type = string
     }))
+    ultra_ssd_enabled = bool
   }))
   description = "A Map of VM configuration settings"
   default = {
@@ -23,12 +25,15 @@ variable "vms" {
       }
       disks = {
         "d1" = {
-          size = 10
+          size                 = 10
+          storage_account_type = "Standard_LRS"
         }
         "d2" = {
-          size = 20
+          size                 = 20
+          storage_account_type = "Standard_LRS"
         }
       }
+      ultra_ssd_enabled = false
     }
     "vm2" = {
       size = "Standard_F3"
@@ -40,9 +45,11 @@ variable "vms" {
       }
       disks = {
         "d1" = {
-          size = 30
+          size                 = 30
+          storage_account_type = "UltraSSD_LRS"
         }
       }
+      ultra_ssd_enabled = true
     }
   }
 
